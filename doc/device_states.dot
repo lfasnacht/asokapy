@@ -1,0 +1,29 @@
+digraph G {
+    DSProbing -> DSProbing [label="num_sent++", color="red", penwidth=2];
+    DSProbing -> DSProbingHP [color="red", label="num_sent>=max_probing_tries"];
+    DSProbingHP -> DSProbingHP [color="red", penwidth=2];
+    
+    DSRunning -> DSRunning [color="red", penwidth=2];
+    
+    DSRunning -> DSProbing [color="red", label="timeout: reset_state()"];
+    DSReadPIB -> DSProbing [color="red", label="timeout: reset_state()"];
+    DSWritePIB -> DSProbing [color="red", label="timeout: reset_state()"];
+    DSWritePIBToNVM -> DSProbing [color="red",label="timeout: reset_state()"];
+    
+    DSReadPIB -> DSReadPIB [color="red", penwidth=2];
+    DSWritePIB -> DSWritePIB [color="red", penwidth=2];
+    DSWritePIBToNVM -> DSWritePIBToNVM [color="red", penwidth=2];
+    
+    DSWritePIBToNVM -> DSProbing [color="green", label="OK: reset_state()"]; 
+    DSWritePIB -> DSWritePIBToNVM [color="green", label="OK"];
+    DSWritePIB -> DSWritePIB [color="green", label="offset+++"];
+    
+    DSProbingHP -> DSReadPIB [color="green", label="set pib header"];
+    DSReadPIB -> DSReadPIB [color="green", label="pib+=..."];
+    DSReadPIB -> DSWritePIB [color="green", label="mac = interface_mac"];
+    
+    DSProbing -> DSRunning [color="blue"];
+    DSProbingHP -> DSRunning [color="blue"];
+    DSRunning -> DSRunning [color="blue"];
+
+}
